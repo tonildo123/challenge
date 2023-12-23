@@ -17,9 +17,9 @@ public class GenderController {
     private GenderService genderService;
 
 
-    @PostMapping("/create")
-    public ResponseEntity<Gender> createGender(@RequestBody  Gender gender){
-        Gender genderCreated = genderService.createGender(gender);
+    @PostMapping("/create/{id}")
+    public ResponseEntity<Gender> createGender(@RequestBody  Gender gender, @PathVariable Long id){
+        Gender genderCreated = genderService.createGender(gender, id);
 
         if (genderCreated != null) {
             return new ResponseEntity<>(genderCreated, HttpStatus.OK);

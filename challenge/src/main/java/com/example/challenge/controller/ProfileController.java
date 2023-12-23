@@ -1,6 +1,8 @@
 package com.example.challenge.controller;
 
+import com.example.challenge.model.CharacterEntity;
 import com.example.challenge.model.Profile;
+import com.example.challenge.model.User;
 import com.example.challenge.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,13 +36,6 @@ public class ProfileController {
         }
     }
 
-    @PostMapping("/create")
-    @ResponseBody
-    public ResponseEntity<String> createProfile(@RequestBody Profile profile) {
-        ResponseEntity<String> response = profileService.createProfile(profile);
-        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
-    }
-
     @PutMapping("update/{id}")
     @ResponseBody
     public ResponseEntity<Profile> update(@RequestBody Profile profile, @PathVariable Long id) {
@@ -51,6 +46,20 @@ public class ProfileController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("create/{id}")
+    @ResponseBody
+    public ResponseEntity<Profile> createProfile(@RequestBody Profile profile, @PathVariable Long id) {
+
+        Profile profileCreated = profileService.createProfile(profile, id);
+
+        if (profileCreated != null) {
+            return new ResponseEntity<>(profileCreated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @DeleteMapping("delete/{id}")

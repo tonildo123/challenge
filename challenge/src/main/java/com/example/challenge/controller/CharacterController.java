@@ -34,10 +34,10 @@ public class CharacterController {
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     @ResponseBody
-    public ResponseEntity<CharacterEntity> createCharacter(@RequestBody CharacterEntity characterEntity){
-        CharacterEntity userCreated = characterService.createCharacter(characterEntity);
+    public ResponseEntity<CharacterEntity> createCharacter(@RequestBody CharacterEntity characterEntity, @PathVariable Long id){
+        CharacterEntity userCreated = characterService.createCharacter(characterEntity, id);
 
         if (userCreated != null) {
             return new ResponseEntity<>(userCreated, HttpStatus.OK);

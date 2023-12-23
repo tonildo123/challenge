@@ -2,7 +2,9 @@ package com.example.challenge.service;
 
 import com.example.challenge.model.Gender;
 import com.example.challenge.model.Movie;
+import com.example.challenge.model.User;
 import com.example.challenge.repository.IGenderRepository;
+import com.example.challenge.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +17,14 @@ public class GenderService {
     @Autowired
     private IGenderRepository genderRepository;
 
-    public Gender createGender(Gender gender) {
+    @Autowired
+    private IUserRepository iUserRepository;
 
+
+    public Gender createGender(Gender gender, Long id) {
+
+        User user = iUserRepository.findById(id).get();
+        gender.setUser(user);
         return genderRepository.save(gender);
     }
     // traer todos

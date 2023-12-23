@@ -33,7 +33,10 @@ public class MovieService {
     @Autowired
     private IUserRepository iUserRepository;
 
-    public Movie createMovie(Movie movie) {
+    public Movie createMovie(Movie movie, Long id) {
+
+        User user = iUserRepository.findById(id).get();
+        movie.setUser(user);
 
         return movieRepository.save(movie);
     }
@@ -56,6 +59,19 @@ public class MovieService {
 
     public void deleteMovieById(Long id){
         movieRepository.deleteById(id);
+    }
+
+    public Movie addGenderAndCharacterToMovie (Long movie_id, Long gender_id, Long character_id){
+
+        Movie movie = movieRepository.findById(movie_id).get();
+        Gender gender = iGenderRepository.findById(gender_id).get();
+        CharacterEntity characterEntity = iCharacterRepository.findById(character_id).get();
+
+        movie.getGenders().add(gender);
+        movie.getCharacterEntities().add(characterEntity);
+
+        return movieRepository.save(movie);
+
     }
 
 }

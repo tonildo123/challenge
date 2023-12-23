@@ -1,6 +1,5 @@
 package com.example.challenge.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +7,6 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -16,5 +14,18 @@ public class User {
     private Long id;
     private String email;
     private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Movie> movies;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CharacterEntity> characterEntities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Gender> genders;
+
 
 }

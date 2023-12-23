@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,8 +17,10 @@ public class Gender {
     private String image;
     private String name;
 
-    //movie asociada
-    // Asociación con películas (un género puede estar en varias películas)
-    @ManyToMany(mappedBy = "gender")
-    private Set<Movie> movies = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany(mappedBy = "genders")
+    private Set<Movie> movies;
 }

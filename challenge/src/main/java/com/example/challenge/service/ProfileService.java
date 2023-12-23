@@ -5,13 +5,10 @@ import com.example.challenge.model.User;
 import com.example.challenge.repository.IProfileRepository;
 import com.example.challenge.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,30 +20,12 @@ public class ProfileService {
     @Autowired
     private IUserRepository iUserRepository;
 
-    // Crear
-    public ResponseEntity<String> createProfile(Profile profile) {
+    public Profile createProfile (Profile profile, Long id) {
 
-        Optional<User> userOptional = iUserRepository.findById(profile.getUser_id());
+        User user = iUserRepository.findById(id).get();
+        profile.setUser(user);
 
-        if (userOptional.isPresent()) {
-
-            System.out.println("existe el usuario ");
-
-            Optional<Profile> existingProfile = iProfileRepository.findByUserId(profile.getUser_id());
-
-            if (existingProfile.isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Ya existe un perfil para el usuario con id: " + profile.getUser_id());
-            } else {
-                System.out.println("existe el usuario pero no el perfil");
-                iProfileRepository.save(profile);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Perfil creado exitosamente");
-            }
-        } else {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Usuario no encontrado con id: " + profile.getUser_id());
-        }
+        return iProfileRepository.save(profile);
     }
 
     // traer todos
@@ -62,6 +41,11 @@ public class ProfileService {
     public Profile updateProfile(Long id, Profile profile) {
         Profile existingProfile = iProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profile not found with id: " + id));
+
+        existingProfile.setUser(profile.getUser());
+        existingProfile.setName(profile.getName());
+        existingProfile.setPhoto(profile.getPhoto());
+        existingProfile.setPhone(profile.getPhone());
 
         return iProfileRepository.save(existingProfile);
     }
