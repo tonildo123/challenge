@@ -1,6 +1,7 @@
 package com.example.challenge.controller;
 
-import com.example.challenge.model.CharacterEntity;
+import com.example.challenge.dto.ProfileDTO;
+import com.example.challenge.dto.UserDTO;
 import com.example.challenge.model.Profile;
 import com.example.challenge.model.User;
 import com.example.challenge.service.ProfileService;
@@ -10,9 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/profile")
+@RequestMapping("api/profile/")
 public class ProfileController {
 
     @Autowired
@@ -50,17 +52,23 @@ public class ProfileController {
 
     @PostMapping("create/{id}")
     @ResponseBody
-    public ResponseEntity<Profile> createProfile(@RequestBody Profile profile, @PathVariable Long id) {
+    public ResponseEntity<?> createProfile(@RequestBody Profile profile, @PathVariable Long id){
 
         Profile profileCreated = profileService.createProfile(profile, id);
-
         if (profileCreated != null) {
-            return new ResponseEntity<>(profileCreated, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+            ProfileDTO profileDTO = new ProfileDTO();
 
+            profileDTO.setName(profileCreated.getName());
+            profileDTO.setPhone(profileCreated.getPhone());
+            profileDTO.setPhoto(profileCreated.getPhoto());
+
+            return new ResponseEntity<>(profileDTO, HttpStatus.OK);
+        } else {
+            String errorMessage = "El perfil ya existe para el usuario con ID " + id;
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        }
     }
+
 
     @DeleteMapping("delete/{id}")
     @ResponseBody

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -20,12 +22,17 @@ public class CharacterEntity {
     private int age;
     private int weight;
     private String story;
+    private Long movieId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CharacterEntity that)) return false;
+        return getName().equals(that.getName());
+    }
 
-    @ManyToMany(mappedBy = "characterEntities")
-    private Set<Movie> movies;
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
 }

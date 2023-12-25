@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -17,26 +18,17 @@ public class Movie {
     private String title;
     private Date date;
     private int rating;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Movie movie)) return false;
+        return getTitle().equals(movie.getTitle());
+    }
 
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "movie_characters",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "character_id")
-    )
-    private Set<CharacterEntity> characterEntities;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "movie_genders",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "gender_id")
-    )
-    private Set<Gender> genders;
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle());
+    }
 }

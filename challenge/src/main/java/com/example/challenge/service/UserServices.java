@@ -17,9 +17,16 @@ public class UserServices {
     private IUserRepository iUserRepository;
 
     public User createUser(User user){
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        return iUserRepository.save(user);
+        Optional<User> optionalUser = iUserRepository.findByEmail(user.getEmail());
+
+        if (optionalUser != null){
+            return null;
+        }else {
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            user.setPassword(hashedPassword);
+            return iUserRepository.save(user);
+        }
+
     }
     public Optional<User> loginUser(User user) {
         Optional<User> optionalUser = iUserRepository.findByEmail(user.getEmail());

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/character")
+@RequestMapping("api/character/")
 public class CharacterController {
 
     @Autowired
@@ -34,17 +34,20 @@ public class CharacterController {
         }
     }
 
-    @PostMapping("/create/{id}")
+    @PostMapping("create/{id}")
     @ResponseBody
-    public ResponseEntity<CharacterEntity> createCharacter(@RequestBody CharacterEntity characterEntity, @PathVariable Long id){
-        CharacterEntity userCreated = characterService.createCharacter(characterEntity, id);
+    public ResponseEntity<?> createCharacter(@RequestBody CharacterEntity characterEntity, @PathVariable Long id){
 
-        if (userCreated != null) {
-            return new ResponseEntity<>(userCreated, HttpStatus.OK);
+        CharacterEntity characterCreated = characterService.createCharacter(characterEntity, id);
+
+        if (characterCreated != null) {
+            return new ResponseEntity<>(characterCreated, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            String errorMessage = "Ya existe un personaje asociado a la pelicula con ID " + id;
+            return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
         }
     }
+
 
     @PutMapping("update/{id}")
     @ResponseBody

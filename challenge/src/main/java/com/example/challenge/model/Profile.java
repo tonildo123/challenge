@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Objects;
+
 @Entity
 @Data
 public class Profile {
@@ -14,9 +16,17 @@ public class Profile {
     private String name;
     private String photo;
     private String phone;
+    private Long userId;
 
-    @JoinColumn(name = "user_id")
-    @OneToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Profile profile)) return false;
+        return getName().equals(profile.getName()) && Objects.equals(getPhone(), profile.getPhone());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getPhone());
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/user/")
 public class UserController {
     @Autowired
     private UserServices userServices;
@@ -42,20 +42,21 @@ public class UserController {
         }
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("auth/register")
     @ResponseBody
-    public ResponseEntity<UserDTO> createUser(@RequestBody User user){
+    public ResponseEntity<?> createUser(@RequestBody User user){
         User userCreated = userServices.createUser(user);
         if (userCreated != null) {
             UserDTO userDTO = new UserDTO(userCreated.getId(), userCreated.getEmail());
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            String errorMessage = "El usuario con el correo electrónico " + user.getEmail() + " ya está registrado.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
         }
     }
 
     // En UserController
-    @PostMapping("/auth/login")
+    @PostMapping("auth/login")
     @ResponseBody
     public ResponseEntity<UserDTO> login(@RequestBody User user) {
         Optional<User> loggedInUser = userServices.loginUser(user);

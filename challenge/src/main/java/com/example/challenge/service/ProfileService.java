@@ -1,7 +1,6 @@
 package com.example.challenge.service;
 
 import com.example.challenge.model.Profile;
-import com.example.challenge.model.User;
 import com.example.challenge.repository.IProfileRepository;
 import com.example.challenge.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,12 +20,16 @@ public class ProfileService {
     @Autowired
     private IUserRepository iUserRepository;
 
-    public Profile createProfile (Profile profile, Long id) {
+    public Profile createProfile(Profile profile, Long id) {
 
-        User user = iUserRepository.findById(id).get();
-        profile.setUser(user);
+        Optional<Profile> optionalProfile = iProfileRepository.findByUserId(id);
 
-        return iProfileRepository.save(profile);
+        if (optionalProfile.isPresent()) {
+            return null;
+        }else {
+            profile.setUserId(id);
+            return iProfileRepository.save(profile);
+        }
     }
 
     // traer todos
@@ -42,7 +46,6 @@ public class ProfileService {
         Profile existingProfile = iProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profile not found with id: " + id));
 
-        existingProfile.setUser(profile.getUser());
         existingProfile.setName(profile.getName());
         existingProfile.setPhoto(profile.getPhoto());
         existingProfile.setPhone(profile.getPhone());
