@@ -69,7 +69,6 @@ public class ProfileController {
         }
     }
 
-
     @DeleteMapping("delete/{id}")
     @ResponseBody
     public ResponseEntity<String> delete(@PathVariable Long id) {
