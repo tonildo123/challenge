@@ -50,6 +50,21 @@ public class ClientesController {
         }
     }
 
+    @GetMapping("getbyname/{name}")
+    @ResponseBody
+    public ResponseEntity<ClienteDTO> getOneByName(@PathVariable String name) {
+        Clientes client = clienteService.getClientByName(name);
+
+        if (client != null) {
+            ClienteDTO clienteDTO = new ClienteDTO(client.getName(), client.getLastname(), client.getBrithdate(),
+                    client.getCuit(), client.getEmail(),
+                    client.getDomicilio(), client.getPhone());
+            return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/inserter")
     @ResponseBody
     public ResponseEntity<?> createUser(@RequestBody Clientes client){
