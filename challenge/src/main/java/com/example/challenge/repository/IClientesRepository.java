@@ -1,7 +1,6 @@
 package com.example.challenge.repository;
 
 import com.example.challenge.model.Clientes;
-import com.example.challenge.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

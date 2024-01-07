@@ -1,12 +1,8 @@
 package com.example.challenge.controller;
 
 import com.example.challenge.dto.ClienteDTO;
-import com.example.challenge.dto.UserDTO;
 import com.example.challenge.model.Clientes;
-import com.example.challenge.model.Profile;
-import com.example.challenge.model.User;
 import com.example.challenge.service.ClienteService;
-import com.example.challenge.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/clientes/")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ClientesController {
 
     // get all clients
@@ -28,8 +25,9 @@ public class ClientesController {
     public ResponseEntity<List<ClienteDTO>> getAll() {
         List<Clientes> clientes = clienteService.getAllClients();
         List<ClienteDTO> clientesDTOList = clientes.stream()
-                .map(cliente -> new ClienteDTO(cliente.getName(), cliente.getLastname(), cliente.getBrithdate(), cliente.getCuit(), cliente.getEmail(),
-                        cliente.getDomicilio(), cliente.getPhone()))
+                .map(cliente -> new ClienteDTO(cliente.getName(), cliente.getLastname(),
+                        cliente.getBrithdate(), cliente.getCuit(),
+                        cliente.getDomicilio(), cliente.getPhone(),cliente.getEmail()))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(clientesDTOList, HttpStatus.OK);

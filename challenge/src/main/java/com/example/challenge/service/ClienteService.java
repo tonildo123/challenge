@@ -1,14 +1,12 @@
 package com.example.challenge.service;
 
 import com.example.challenge.model.Clientes;
-import com.example.challenge.model.Profile;
 import com.example.challenge.repository.IClientesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
