@@ -21,7 +21,7 @@ public class Clientes {
     private String lastname;
     private Date brithdate;
     private String cuit;
-    private String domicilio;
+    private String address;
     private String phone;
     private String email;
 

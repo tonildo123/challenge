@@ -11,7 +11,7 @@ public class ClienteDTO {
     private String lastname;
     private Date brithdate;
     private String cuit;
-    private String domicilio;
+    private String address;
     private String phone;
     private String email;
 
@@ -22,14 +22,14 @@ public class ClienteDTO {
                       String lastname,
                       Date brithdate,
                       String cuit,
-                      String domicilio,
+                      String address,
                       String phone,
                       String email) {
         this.name = name;
         this.lastname = lastname;
         this.brithdate = brithdate;
         this.cuit = cuit;
-        this.domicilio = domicilio;
+        this.address = address;
         this.phone = phone;
         this.email = email;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/clientes/")
+@RequestMapping("api/clients/")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ClientesController {
 
@@ -27,7 +27,7 @@ public class ClientesController {
         List<ClienteDTO> clientesDTOList = clientes.stream()
                 .map(cliente -> new ClienteDTO(cliente.getName(), cliente.getLastname(),
                         cliente.getBrithdate(), cliente.getCuit(),
-                        cliente.getDomicilio(), cliente.getPhone(),cliente.getEmail()))
+                        cliente.getAddress(), cliente.getPhone(),cliente.getEmail()))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(clientesDTOList, HttpStatus.OK);
@@ -36,61 +36,25 @@ public class ClientesController {
     @GetMapping("getone/{id}")
     @ResponseBody
     public ResponseEntity<ClienteDTO> getOne(@PathVariable Long id) {
-        Clientes client = clienteService.getClientById(id);
-
-        if (client != null) {
-            ClienteDTO clienteDTO = new ClienteDTO(client.getName(), client.getLastname(), client.getBrithdate(),
-                    client.getCuit(), client.getEmail(),
-                    client.getDomicilio(), client.getPhone());
-            return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return clienteService.getClientDTOById(id);
     }
 
     @GetMapping("getbyname/{name}")
     @ResponseBody
     public ResponseEntity<ClienteDTO> getOneByName(@PathVariable String name) {
-        Clientes client = clienteService.getClientByName(name);
-
-        if (client != null) {
-            ClienteDTO clienteDTO = new ClienteDTO(client.getName(), client.getLastname(), client.getBrithdate(),
-                    client.getCuit(), client.getEmail(),
-                    client.getDomicilio(), client.getPhone());
-            return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return clienteService.getClientDTOByName(name);
     }
 
     @PostMapping("/inserter")
     @ResponseBody
-    public ResponseEntity<?> createUser(@RequestBody Clientes client){
-        Clientes clientCreated = clienteService.createClient(client);
-        if (clientCreated != null) {
-            ClienteDTO clientDTO = new ClienteDTO(clientCreated.getName(), clientCreated.getLastname(),
-                    clientCreated.getBrithdate(),clientCreated.getCuit(), clientCreated.getEmail(),
-                    clientCreated.getDomicilio(), clientCreated.getPhone());
-            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
-        } else {
-            String errorMessage = "El usuario con el correo electrónico " + client.getEmail() + " ya está registrado.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<?> createUser(@RequestBody Clientes client) {
+        return clienteService.createClientDTO(client);
     }
 
     @PutMapping("update/{id}")
     @ResponseBody
     public ResponseEntity<ClienteDTO> update(@RequestBody Clientes clientes, @PathVariable Long id) {
-        clientes.setId(id);
-        Clientes updatedClient = clienteService.updateClient(id, clientes);
-        if (updatedClient != null) {
-            ClienteDTO clienteDTO = new ClienteDTO(updatedClient.getName(), updatedClient.getLastname(),
-                    updatedClient.getBrithdate(),updatedClient.getCuit(), updatedClient.getEmail(),
-                    updatedClient.getDomicilio(), updatedClient.getPhone());
-            return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return clienteService.updateClientDTO(id, clientes);
     }
 
     @DeleteMapping("delete/{id}")
